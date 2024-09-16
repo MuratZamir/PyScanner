@@ -4,6 +4,7 @@ A simple yet efficient Python-based port scanner that utilizes different methods
 1. `simple` just iterates over a for loop, sends request one at a time
 2. `concurrent` utilizes ThreadPoolExecutor to manage concurrent executions
 3. `async` uses coroutines with an event loop for async tasks
+4. `service-enum` uses advanced nmap scanning to gather futher service/version information
 
 ## Features
 
@@ -22,8 +23,8 @@ A simple yet efficient Python-based port scanner that utilizes different methods
 
    ```bash
    git clone https://github.com/MuratZamir/PyScanner.git
-   cd PyScanner
-   python3 main.py <ip> <range>
+   cd PyScanner/<folder>
+   sudo python3 main.py <ip> <range>
 ```
 
 ## Example Output
