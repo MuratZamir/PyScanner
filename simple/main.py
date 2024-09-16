@@ -2,14 +2,13 @@ import vulnscanner
 import sys
 import getopt
 import pyfiglet
-import timeit
+import time
 
-
+start = time.perf_counter()
 
 ascii_banner = pyfiglet.figlet_format("PORTPY")
 print(ascii_banner)
 
-# TODO: add getopt args for passing cli parameters
 targetIp = sys.argv[1]
 portNumber = sys.argv[2]
 
@@ -38,4 +37,6 @@ def main():
     # print(execution_time)
 main()
 
+finish = time.perf_counter()
 
+print(f'\nFinished in {round(finish-start, 2)} seconds')

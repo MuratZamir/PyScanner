@@ -1,3 +1,5 @@
 # Ignore files
-knowledge.md
-benchmark.md
+stuff/
+__pycache__/
+*.pyc
+

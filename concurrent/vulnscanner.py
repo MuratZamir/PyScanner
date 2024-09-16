@@ -4,7 +4,6 @@ import socket
 
 class Scanner:
 
-    #TODO: instead of statically getting those, try a way to dynamically get service information after port scanning
     portServices = {
         21: 'ftp',
         22: 'ssh',
@@ -48,8 +47,6 @@ class Scanner:
         try:
             ipAddress = IP(self.target)
             return ipAddress
-        # except Exception as e:
-        #     print(type(e))
         except ValueError:
             print(f'{self.target} is not a valid IP address.')
             #return e 
