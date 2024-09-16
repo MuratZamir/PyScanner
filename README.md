@@ -1,6 +1,9 @@
 # Python Port Scanner
 
-A simple yet efficient Python-based port scanner that utilizes concurrency to scan ports quickly. This tool uses the `concurrent.futures` module to perform concurrent scanning of multiple ports, significantly reducing the time required to complete a full scan.
+A simple yet efficient Python-based port scanner that utilizes different methods to scan ports. Each folder has its own way of building the scanner.
+1. `simple` just iterates over a for loop, sends request one at a time
+2. `concurrent` utilizes ThreadPoolExecutor to manage concurrent executions
+3. `async` uses coroutines with an event loop for async tasks
 
 ## Features
 
