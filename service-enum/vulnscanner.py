@@ -23,7 +23,7 @@ class Scanner:
         }
         self.openPortCount = 0 # open port counter
         self.lock = asyncio.Lock() # Lock to ensure safe access to counter
-        self.nmapScanPorts = []
+        self.nmapScanPorts = [] # counts open port numbers for nmap
 
 
     def ipToDomain(self):

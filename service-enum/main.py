@@ -49,15 +49,12 @@ async def main():
 
         '''Further service enumeration with NMAP'''
         furtherEnum = input('\nFurther service enum? [y/n] ')
-        
-        
 
         if furtherEnum.lower() == 'y':
             allPorts = input('Service enum for all open ports? [y/n] ')
             # serviceName = scanner.portServices.get(scanner.portServices, 'unknown')
             
             if allPorts.lower() == 'y':
-                
                 print(f"\n{'PORT':<7}{'SERVICE':<10}")
                 for port in scanner.nmapScanPorts:
                     serviceInfo = scanner.nmap(str(port))
@@ -69,7 +66,6 @@ async def main():
                 print(f"\n{'PORT':<7}{'SERVICE':<10}")
                 for port in specificPortsList:
                     serviceInfo = scanner.nmap(str(port))
-                    
                     print(f"{port:<7}{serviceInfo:<23}")
             
 
