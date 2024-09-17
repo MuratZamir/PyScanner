@@ -58,7 +58,7 @@ async def main():
             
             if allPorts.lower() == 'y':
                 
-                print(f"\n{'PORT':<7}{'VERSION':<10}")
+                print(f"\n{'PORT':<7}{'SERVICE':<10}")
                 for port in scanner.nmapScanPorts:
                     serviceInfo = scanner.nmap(str(port))
                     print(f"{port:<7}{serviceInfo:<23}")
@@ -66,7 +66,7 @@ async def main():
             elif allPorts.lower() == 'n':
                 specificPorts = input('Specific port(s): [comma-separated] ')
                 specificPortsList = map(int, specificPorts.split(','))  # Convert to a list of integers
-                print(f"\n{'PORT':<7}{'VERSION':<10}")
+                print(f"\n{'PORT':<7}{'SERVICE':<10}")
                 for port in specificPortsList:
                     serviceInfo = scanner.nmap(str(port))
                     
