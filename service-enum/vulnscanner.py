@@ -1,4 +1,5 @@
 from IPy import IP
+import ipaddress
 import sys
 import socket
 import asyncio
@@ -26,20 +27,18 @@ class Scanner:
         self.nmapScanPorts = [] # counts open port numbers for nmap
 
 
-    def ipToDomain(self):
-        '''Function to resolve IP addresses'''
-        domain = socket.gethostbyname(self.target)
-        return domain
-
 
     def validateIp(self):
         '''Function to check if the IP is valid or not'''
         try:
-            ipAddress = IP(self.target)
-            return str(ipAddress)
+            validIp = ipaddress.ip_address(self.target)
+            return str(validIp)
         except ValueError:
-            print(f'{self.target} is not a valid IP address.')
-            sys.exit(1)
+            try:
+                resolvedIp = socket.gethostbyname(self.target)
+                return str(resolvedIp)
+            except (ValueError, socket.gaierror):
+                return None
     
 
 
@@ -47,25 +46,25 @@ class Scanner:
         '''Async function to check if a port is open or not'''
         async with self.semaphore: # limits simultaneous network connections
             try: 
-
-                convertedIp = str(self.validateIp())
-
-                '''Returns tuple containing two objects'''
-                # StreamReader for reading data from async connection
-                # StreamWriter for writing data to async connection
-                reader, writer = await asyncio.wait_for(asyncio.open_connection(convertedIp, port), timeout=2)
-
                 
-                serviceName = self.portServices.get(port, 'unknown')
-                print(f"{port}/tcp open  {serviceName}")
-                self.nmapScanPorts.append(port) # counting the open ports for nmap -sV
+                isValidIp = self.validateIp() # returns the valid IP str
 
-                async with self.lock:
-                    self.openPortCount +=1
+                if isValidIp:
+                    '''Returns tuple containing two objects'''
+                    # StreamReader for reading data from async connection
+                    # StreamWriter for writing data to async connection
+                    reader, writer = await asyncio.wait_for(asyncio.open_connection(isValidIp, port), timeout=2)
+                    
+                    serviceName = self.portServices.get(port, 'unknown')
 
-                writer.close()
-                await writer.wait_closed()
+                    print(f"{port:<7}{'open':<7}{serviceName:<10}")
+                    self.nmapScanPorts.append(port) # counting the open ports for nmap -sV
 
+                    async with self.lock:
+                        self.openPortCount +=1
+
+                    writer.close()
+                    await writer.wait_closed()
 
             except (asyncio.TimeoutError, ConnectionRefusedError, OSError):
                 pass
@@ -79,17 +78,20 @@ class Scanner:
         try:
             versionResult = nm.scan(self.target, str(port), arguments='-sV')
 
-            # print("Raw Nmap Output:", versionResult)
-            parsedResult = versionResult['scan'][self.target]['tcp'][int(port)]
+            target_ip = list(versionResult['scan'].keys())[0] # get the first key - IP address
+
+            parsedResult = versionResult['scan'][target_ip]['tcp'][int(port)]
+            hostName = versionResult['scan'][target_ip].get('hostnames', [])
 
             name = parsedResult.get('name', 'unknown')
             product = parsedResult.get('product', 'unknown')
             version = parsedResult.get('version', 'unknown')
             extraInfo = parsedResult.get('extrainfo', 'unknown')
-            # cpe = parsedResult['cpe']
-
-            result = f'{product} {version} {extraInfo}'
+        
+            result = f'{name} {product} {version} {extraInfo}'
             return result
         
-        except KeyError:
-            return "no version information available"
+        except (KeyError, TypeError) as e:
+            print("\rNmap is not picking up service information, please try again later!")
+            pass
+
