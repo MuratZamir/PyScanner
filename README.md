@@ -4,7 +4,7 @@ A simple yet efficient Python-based port scanner that utilizes different methods
 1. `simple` just iterates over a for loop, sends request one at a time
 2. `concurrent` utilizes ThreadPoolExecutor to manage concurrent executions
 3. `async` uses coroutines with an event loop for async tasks
-4. `service-enum` uses advanced nmap scanning to gather futher service/version information
+4. `service-enum` uses advanced nmap scanning to gather futher service/version information, please run with `sudo` and make sure you have `nmap` installed in your system
 
 ## Features
 
